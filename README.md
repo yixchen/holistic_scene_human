@@ -1,7 +1,6 @@
 # Holistic<sup>++</sup> Scene Understanding
 
-This repo contains code for ICCV 2019 paper.
-
+This repo contains code for ICCV 2019 paper\
 [Holistic++ Scene Understanding: Single-view 3D Holistic Scene Parsing and Human Pose Estimation with Human-Object Interaction and Physical Commensense](https://yixchen.github.io/holisticpp/file/holistic_scenehuman.pdf)  
 Yixin Chen*, Siyuan Huang*, Tao Yuan, Siyuan Qi, Yixin Zhu, Song-Chun Zhu  
 *The IEEE International Conference on Computer Vision (ICCV)*, 2019   
