@@ -1,0 +1,9 @@
+numpy
+scipy
+matplotlib
+opencv-python==3.4.0.12
+shapely
+sklearn
+Pillow
+pyquaternion
+
