@@ -432,7 +432,7 @@ def vis_all_multi(sampler, image_dir, result_dir, save_image=True):
     vis_scene_w_ax_multi(sampler.pg_ini.layout, sampler.pg_ini.bbx_3d, sampler.pg_ini.pose_3d, ax5)
     ax6 = fig.add_subplot(2, 3, 6, projection='3d')
     vis_scene_w_ax_multi(sampler.pg_best.layout, sampler.pg_best.bbx_3d, sampler.pg_best.pose_3d, ax6)
-    plt.axis('equal')
+    #  plt.axis('equal')
     if save_image:
         fig.savefig(os.path.join(result_dir, image_dir.split('/')[-1].split('.')[0]+'all_result.png'))
         plt.close(fig)

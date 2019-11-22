@@ -11,7 +11,6 @@ import random
 import json
 import copy
 from pg import HOI
-from pred_all.pred import PosePred
 from mcmc import metropolis_hasting
 from utils import *
 
@@ -24,18 +23,31 @@ OBJ_CATEGORY_CLEAN = ['recycle_bin', 'cpu', 'paper', 'toilet', 'stool', 'whitebo
 hoi_detector = None  # PosePred('pred_all/weights-action-0.2-0.99.hdf5', 'pred_all/weights-hoi-0.2-0.91.hdf5')
 
 
+def hoi_obj_label(hoi_type):
+    if hoi_type == 'sit':
+        return ['sofa_chair', 'chair', 'sofa']
+    elif hoi_type == 'call':
+        return ['phone']
+    elif hoi_type == 'drink_eat':
+        return ['cup']
+    elif hoi_type == 'look_at':
+        return ['paper', 'keyboard']
+    elif hoi_type == 'stand' or hoi_type == 'haggle':
+        return []
+
+
 class Sampler:
     def __init__(self, arglist, pg):
         self.pg_current = pg
         self.energy_current = None
         # path
-        self.ROOT_PATH = arglist.res_dir
+        self.ROOT_PATH = os.path.join(arglist.data_dir, 'image', 
+                arglist.image_name)
         # configuration
         self.max_step = arglist.max_step_len
         self.sample_pose = arglist.sample_pose
         self.sample_obj = arglist.sample_obj
         self.sample_layout = arglist.sample_layout
-        self.sample_camera = arglist.sample_camera
         self.save_history = arglist.save_history
         self.save_dir = arglist.save_dir
         self.save_count = 0
@@ -193,6 +205,8 @@ class Sampler:
     @staticmethod
     def compute_4dhoi_error(pg):
         energy = 0
+        if len(pg.hoi) == 0:
+            return 0
         for _jter in range(len(pg.pose_3d)):
             for _iter in range(len(pg.hoi[_jter].type)):
                 if pg.hoi[_jter].type[_iter] == 'sit':
@@ -284,17 +298,6 @@ class Sampler:
                     pg.e_support += np.exp(height_diff*10 + intersect_ratio*6)
 
         return pg.e_pose_ground + pg.e_support
-
-    @staticmethod
-    def hoi_obj_label(hoi_type):
-        if hoi_type == 'sit':
-            return ['sofa_chair', 'chair', 'sofa']
-        elif hoi_type == 'call':
-            return ['phone']
-        elif hoi_type == 'drink_eat':
-            return ['cup']
-        elif hoi_type == 'look_at':
-            return ['paper', 'keyboard']
 
     @staticmethod
     def detect_hoi_load(pg):
@@ -542,7 +545,6 @@ class Sampler:
                 gradient = self.energy_current - e_total_des
                 if gradient == 0:
                     return
-                rotate_angle = None
                 gradient_type, move_prob = self.q_moving_proposal()
                 if gradient_type == 0:  # do gradient descent
                     rotate_angle *= np.sign(gradient)
@@ -729,7 +731,6 @@ class Sampler:
             if gradient == 0:
                 return
             gradient_type, move_prob = self.q_moving_proposal()
-            rotate_angle = None
             if gradient_type == 0:  # do gradient descent
                 rotate_angle *= np.sign(gradient)
             else:
@@ -1012,7 +1013,7 @@ class Sampler:
             for _ in range(self.max_step):
                 self.layout_adjust(T)
         end = time.time()
-        print(end-start)
+        print('time elapsed:', end-start)
 
 
 def main():

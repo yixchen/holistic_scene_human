@@ -34,10 +34,11 @@ Support Python 3+.
 ```
 pip install -r requirements.txt
 ```
-## Data
-1. Download the preprocessed data which contains the image and initialization from <a href="https://drive.google.com/file/d/1RBsGUSFze0z49iGTo2YBe_mx8P0h8S8I/view?usp=sharing"> here </a>, extract it with
 
-        tar -vzxf data.tar.gz       
+## Data
+1. Download the preprocessed data which contains the image and initialization from <a href="https://drive.google.com/file/d/16fT-PYlVab3XJ0MN2xkmhk6yAHtG-rLp/view?usp=sharing"> here </a>, extract it with
+
+        unzip data.zip       
 
 We will release more images from different dataset with initialization soon.
 ## Inference

@@ -41,6 +41,15 @@ def load_data(image_path, result_path, pg):
         print('Cannot find 2d bounding box result.')
         return
 
+    if os.path.isfile(os.path.join(result_path, 'pose_2d.pickle')):
+        with open(os.path.join(result_path, 'pose_2d.pickle'), 'rb') as f:
+            pose_2d = pickle.load(f, encoding='latin1')
+            pg.pose_2d = [single_pose[:, [1, 0]] for single_pose in pose_2d]  # natural image
+            # pg.pose_2d = [single_pose for single_pose in pose_2d]  # sunrgbd
+    else:
+        print('Cannot find 2d pose data.')
+        return
+
     if os.path.isfile(os.path.join(result_path, 'hoi.pickle')):
         with open(os.path.join(result_path, 'hoi.pickle'), 'rb') as f:
             content = pickle.load(f, encoding='latin1')
@@ -56,15 +65,6 @@ def load_data(image_path, result_path, pg):
             pg.bbx_label = pickle.load(f, encoding='latin1')
     else:
         print('Cannot find bounding box labels.')
-        return
-
-    if os.path.isfile(os.path.join(result_path, 'pose_2d.pickle')):
-        with open(os.path.join(result_path, 'pose_2d.pickle'), 'rb') as f:
-            pose_2d = pickle.load(f, encoding='latin1')
-            pg.pose_2d = [single_pose[:, [1, 0]] for single_pose in pose_2d]  # natural image
-            # pg.pose_2d = [single_pose for single_pose in pose_2d]  # sunrgbd
-    else:
-        print('Cannot find 2d pose data.')
         return
 
     if os.path.isfile(os.path.join(result_path, 'camera.pickle')):
@@ -107,6 +107,8 @@ def load_data(image_path, result_path, pg):
         print('Cannot find layout data.')
         return
 
+    return pg
+
 
 def parse_args():
     parser = argparse.ArgumentParser('3D Scene and Pose Sampler')
@@ -139,11 +141,11 @@ def parse_args():
 
 
 def infer_image(arglist):
-    image_path = os.path.join(arglist.data_dir, 'image', arglist.image_name)
+    image_path = os.path.join(arglist.data_dir, 'image', arglist.image_name + '.jpg')
     result_path = os.path.join(arglist.data_dir, 'result', arglist.image_name)
     pg = PG_MULTIPERSON()
     '''load previous result'''
-    load_data(image_path, result_path, pg)
+    pg = load_data(image_path, result_path, pg)
 
     sampler = Sampler(arglist, pg)
     sampler.infer()
