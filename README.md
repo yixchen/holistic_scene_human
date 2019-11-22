@@ -45,7 +45,7 @@ We will release more images from different dataset with initialization soon.
 
 Joint inference of holistic scene understanding and human pose by image name. 
     
-        python inference_natural_image.py --image_name 1
+        python inference_natural_image.py --image_name frame1
 
 
 ## Citation
