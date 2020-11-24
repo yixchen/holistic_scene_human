@@ -234,7 +234,7 @@ class Sampler:
 
                         energy += np.exp(10 * (1 - li))
                 if pg.hoi[_jter].type[_iter] == 'drink_eat':
-                    energy_model = sit_hoi_model([0.0212392, -0.03728930, -0.06195784],
+                    energy_model = hoi_model([0.0212392, -0.03728930, -0.06195784],
                                                  [0.0219587, 0.02563206, 0.15517897])
                     li = 1
                     hip = pg.pose_3d[_jter][0]
